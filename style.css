@@ -38,13 +38,19 @@ h1 {
     display: none;
 }
 
-#slider-container {
-    margin: 20px;
+#gauge-container {
+    margin: 30px auto;
+    width: 400px;
+}
+
+#gauge {
+    cursor: pointer;
 }
 
 #guess-value {
     margin-top: 10px;
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 button {

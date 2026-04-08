@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Temperatur",
+    "low": "kalt",
+    "high": "heiß"
+  },
+  {
+    "title": "Moral",
+    "low": "gut",
+    "high": "böse"
+  },
+  {
+    "title": "Qualität",
+    "low": "schlecht",
+    "high": "gut"
+  },
+  {
+    "title": "Humor",
+    "low": "ernst",
+    "high": "lustig"
+  }
+]

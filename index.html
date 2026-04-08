@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Wavelength Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Wavelength</h1>
+
+    <div id="axis">
+        <span id="left-label">Kalt</span>
+        <span id="right-label">Heiß</span>
+    </div>
+
+    <div id="target-container">
+        <button id="reveal-btn">Ziel anzeigen (nur Clue-Giver)</button>
+        <div id="target" class="hidden"></div>
+    </div>
+
+    <div id="slider-container">
+        <input type="range" min="0" max="100" value="50" id="guess-slider">
+        <div id="guess-value">50</div>
+    </div>
+
+    <button id="submit-btn">Guess abschicken</button>
+
+    <div id="result"></div>
+
+    <button id="new-round">Neue Runde</button>
+
+    <script src="script.js"></script>
+</body>
+</html>

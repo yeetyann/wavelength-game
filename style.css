@@ -1,0 +1,49 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 40px;
+}
+
+#axis {
+    display: flex;
+    justify-content: space-between;
+    width: 400px;
+    margin: 20px auto;
+    font-weight: bold;
+}
+
+#target-container {
+    margin: 20px;
+}
+
+#target {
+    width: 400px;
+    height: 10px;
+    background: red;
+    margin: 10px auto;
+    position: relative;
+}
+
+.hidden {
+    display: none;
+}
+
+#slider-container {
+    margin: 20px;
+}
+
+#guess-value {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+button {
+    margin: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+#result {
+    margin-top: 20px;
+    font-size: 20px;
+}

@@ -1,7 +1,9 @@
 let prompts = [];
 let promptDeck = [];
 let currentPrompt = null;
+
 let targetValue = 5;
+let targetRadius = 1;
 let revealed = false;
 let guess = 5;
 
@@ -71,6 +73,22 @@ function drawNextPrompt() {
     return promptDeck.pop();
 }
 
+// ---------- Helpers ----------
+function valueToPercent(value) {
+    return ((value - 1) / 9) * 100;
+}
+
+function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
+
+function getZoneBounds(center, radius) {
+    return {
+        min: clamp(center - radius, 1, 10),
+        max: clamp(center + radius, 1, 10)
+    };
+}
+
 // ---------- Gauge ----------
 function drawGauge() {
     const cx = canvas.width / 2;
@@ -128,17 +146,14 @@ function updateGuessFromPointer(clientX, clientY) {
 
     let angle = Math.atan2(dy, dx);
 
-    // only allow upper semicircle
     if (angle > 0) {
         return;
     }
 
-    // map [-PI, 0] -> [0, PI]
     const normalized = angle + Math.PI;
-
     const value = Math.round((normalized / Math.PI) * 9) + 1;
-    guess = Math.max(1, Math.min(10, value));
 
+    guess = clamp(value, 1, 10);
     guessValue.textContent = guess;
     drawGauge();
 }
@@ -151,6 +166,10 @@ canvas.addEventListener("click", (e) => {
 function startNewRound() {
     currentPrompt = drawNextPrompt();
     targetValue = Math.floor(Math.random() * 10) + 1;
+
+    // zone half-width: 1 => normal zone size (about 3 fields total in middle)
+    targetRadius = 1;
+
     revealed = false;
     guess = 5;
 
@@ -177,17 +196,32 @@ revealBtn.addEventListener("click", () => {
     if (!revealed) {
         targetDiv.classList.remove("hidden");
 
-        const percent = ((targetValue - 1) / 9) * 100;
+        const bounds = getZoneBounds(targetValue, targetRadius);
+
+        const leftPercent = valueToPercent(bounds.min);
+        const rightPercent = valueToPercent(bounds.max);
+        const centerPercent = valueToPercent(targetValue);
+        const widthPercent = rightPercent - leftPercent;
 
         targetDiv.innerHTML = `
             <div style="
                 position: absolute;
-                left: ${percent}%;
+                left: ${leftPercent}%;
+                width: ${widthPercent}%;
+                height: 100%;
+                background: rgba(37, 99, 235, 0.35);
+                border-radius: 999px;
+            "></div>
+
+            <div style="
+                position: absolute;
+                left: ${centerPercent}%;
                 width: 4px;
                 height: 20px;
-                background: black;
+                background: #111;
                 top: -5px;
                 transform: translateX(-50%);
+                border-radius: 2px;
             "></div>
         `;
 
@@ -208,17 +242,25 @@ document.getElementById("submit-btn").addEventListener("click", () => {
         return;
     }
 
-    const diff = Math.abs(guess - targetValue);
+    const bounds = getZoneBounds(targetValue, targetRadius);
 
     let score;
-    if (diff === 0) score = 4;
-    else if (diff === 1) score = 3;
-    else if (diff === 2) score = 2;
-    else if (diff <= 3) score = 1;
-    else score = 0;
+    if (guess >= bounds.min && guess <= bounds.max) {
+        score = 4;
+    } else {
+        const distanceToZone = Math.min(
+            Math.abs(guess - bounds.min),
+            Math.abs(guess - bounds.max)
+        );
+
+        if (distanceToZone === 1) score = 3;
+        else if (distanceToZone === 2) score = 2;
+        else if (distanceToZone === 3) score = 1;
+        else score = 0;
+    }
 
     resultDiv.textContent =
-        `${currentPrompt.low} ↔ ${currentPrompt.high} | Ziel: ${targetValue} | Guess: ${guess} | Punkte: ${score}`;
+        `${currentPrompt.low} ↔ ${currentPrompt.high} | Zielzone: ${bounds.min}-${bounds.max} | Mitte: ${targetValue} | Guess: ${guess} | Punkte: ${score}`;
 });
 
 // ---------- Button ----------

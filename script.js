@@ -1,4 +1,5 @@
 let prompts = [];
+let promptDeck = [];
 let currentPrompt = null;
 let targetValue = 5;
 let revealed = false;
@@ -14,21 +15,49 @@ const guessValue = document.getElementById("guess-value");
 const targetDiv = document.getElementById("target");
 const resultDiv = document.getElementById("result");
 
+const revealBtn = document.getElementById("reveal-btn");
+
 // Load prompts
 async function loadPrompts() {
     const response = await fetch("prompts.json");
     prompts = await response.json();
+
+    if (!Array.isArray(prompts) || prompts.length === 0) {
+        throw new Error("prompts.json is empty or invalid.");
+    }
+
+    resetPromptDeck();
 }
 
-// Get random prompt
-function getRandomPrompt() {
-    const index = Math.floor(Math.random() * prompts.length);
-    return prompts[index];
+// Fisher-Yates shuffle
+function shuffleArray(array) {
+    const shuffled = [...array];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    return shuffled;
+}
+
+// Create a new shuffled deck
+function resetPromptDeck() {
+    promptDeck = shuffleArray(prompts);
+}
+
+// Draw next prompt from deck
+function drawNextPrompt() {
+    if (promptDeck.length === 0) {
+        resetPromptDeck();
+    }
+
+    return promptDeck.pop();
 }
 
 // Start new round
 function startNewRound() {
-    currentPrompt = getRandomPrompt();
+    currentPrompt = drawNextPrompt();
     targetValue = Math.floor(Math.random() * 10) + 1;
     revealed = false;
 
@@ -42,6 +71,8 @@ function startNewRound() {
 
     slider.value = 5;
     guessValue.textContent = 5;
+
+    revealBtn.textContent = "Ziel anzeigen (Clue-Giver)";
 }
 
 // Slider update
@@ -49,8 +80,8 @@ slider.addEventListener("input", () => {
     guessValue.textContent = slider.value;
 });
 
-// Reveal target (for clue giver)
-document.getElementById("reveal-btn").addEventListener("click", () => {
+// Toggle reveal target
+revealBtn.addEventListener("click", () => {
     if (!revealed) {
         targetDiv.classList.remove("hidden");
 
@@ -58,16 +89,24 @@ document.getElementById("reveal-btn").addEventListener("click", () => {
 
         targetDiv.innerHTML = `
             <div style="
-                position:absolute;
-                left:${percent}%;
-                width:4px;
-                height:20px;
-                background:black;
-                top:-5px;
+                position: absolute;
+                left: ${percent}%;
+                width: 4px;
+                height: 20px;
+                background: black;
+                top: -5px;
+                transform: translateX(-50%);
             "></div>
         `;
 
+        revealBtn.textContent = "Ziel ausblenden";
         revealed = true;
+    } else {
+        targetDiv.classList.add("hidden");
+        targetDiv.innerHTML = "";
+
+        revealBtn.textContent = "Ziel anzeigen (Clue-Giver)";
+        revealed = false;
     }
 });
 
@@ -94,8 +133,16 @@ document.getElementById("new-round").addEventListener("click", () => {
 
 // Init
 async function initGame() {
-    await loadPrompts();
-    startNewRound();
+    try {
+        await loadPrompts();
+        startNewRound();
+    } catch (error) {
+        console.error("Failed to initialize game:", error);
+        promptTitle.textContent = "Fehler beim Laden der Prompts";
+        leftLabel.textContent = "-";
+        rightLabel.textContent = "-";
+        resultDiv.textContent = "Bitte prüfe deine prompts.json.";
+    }
 }
 
 initGame();

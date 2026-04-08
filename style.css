@@ -45,6 +45,8 @@ h1 {
 
 #gauge {
     cursor: pointer;
+    display: block;
+    margin: 0 auto;
 }
 
 #guess-value {

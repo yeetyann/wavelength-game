@@ -4,6 +4,16 @@ body {
     padding: 40px;
 }
 
+h1 {
+    margin-bottom: 5px;
+}
+
+#prompt-title {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
 #axis {
     display: flex;
     justify-content: space-between;
@@ -30,12 +40,6 @@ body {
 
 #slider-container {
     margin: 20px;
-}
-
-#prompt-title {
-    margin-top: 10px;
-    margin-bottom: 20px;
-    font-size: 24px;
 }
 
 #guess-value {

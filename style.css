@@ -1,49 +1,69 @@
-/* ---- Base ---- */
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    text-align: center;
-    padding: 40px;
-    margin: 0;
-
-    background: linear-gradient(135deg, #15c9e9, #10f458);
-    color: #1f2937;
+html {
+    height: 100%;
+    background: linear-gradient(135deg, #0fdcac 0%, #d9eef6 45%, #1e66f6 100%);
 }
 
-/* ---- Headings ---- */
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1f2937;
+    background: linear-gradient(135deg, #0fdcac 0%, #d9eef6 45%, #1e66f6 100%);
+    overflow-x: hidden;
+}
+
+.app-shell {
+    width: min(100%, 520px);
+    margin: 0 auto;
+    padding:
+        max(20px, env(safe-area-inset-top))
+        20px
+        max(24px, env(safe-area-inset-bottom))
+        20px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
 h1 {
-    margin-bottom: 5px;
-    font-size: 42px;
+    margin: 0 0 6px 0;
+    font-size: clamp(2rem, 5vw, 2.8rem);
     font-weight: 700;
 }
 
 #prompt-title {
-    margin-top: 0;
-    margin-bottom: 25px;
-    font-size: 22px;
+    margin: 0 0 22px 0;
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
     font-weight: 500;
     color: #4b5563;
 }
 
-/* ---- Axis ---- */
 #axis {
     display: flex;
     justify-content: space-between;
-    width: 420px;
-    margin: 20px auto;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    margin: 0 auto 20px auto;
     font-weight: 600;
     color: #374151;
+    font-size: clamp(0.95rem, 2.6vw, 1.05rem);
 }
 
-/* ---- Target ---- */
+#axis span {
+    max-width: 42%;
+    word-break: break-word;
+}
+
 #target-container {
-    margin: 20px;
+    margin: 0 0 20px 0;
 }
 
 #target {
-    width: 420px;
+    width: 100%;
     height: 12px;
-    background: #e5e7eb;
-    margin: 10px auto;
+    background: rgba(255, 255, 255, 0.55);
+    margin: 12px auto 0 auto;
     border-radius: 999px;
     position: relative;
     overflow: hidden;
@@ -54,58 +74,65 @@ h1 {
     display: none;
 }
 
-/* ---- Gauge ---- */
 #gauge-container {
-    margin: 40px auto;
-    width: 420px;
+    width: 100%;
+    margin: 24px auto 22px auto;
 }
 
 #gauge {
-    cursor: pointer;
     display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
     margin: 0 auto;
-    filter: drop-shadow(0px 6px 10px rgba(0,0,0,0.15));
+    cursor: pointer;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.12));
 }
 
 #guess-value {
-    margin-top: 12px;
-    font-size: 22px;
+    margin-top: 8px;
+    font-size: 1.6rem;
     font-weight: 600;
 }
 
-/* ---- Buttons ---- */
 button {
-    margin: 10px;
-    padding: 12px 22px;
+    display: inline-block;
+    margin: 10px 6px;
+    padding: 12px 20px;
     border: none;
-    border-radius: 10px;
-
-    font-size: 14px;
+    border-radius: 12px;
+    font-size: 0.95rem;
     font-weight: 600;
-
-    background: #2563eb;
     color: white;
-
     cursor: pointer;
-
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
 }
 
-/* Hover */
 button:hover {
-    transform: translateY(-2px);
-    background: #1d4ed8;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    transform: translateY(-1px);
 }
 
-/* Active */
 button:active {
     transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
-/* Secondary Button (Neue Runde) */
+#reveal-btn {
+    background: #6b7280;
+}
+
+#reveal-btn:hover {
+    background: #59616e;
+}
+
+#submit-btn {
+    background: #2563eb;
+}
+
+#submit-btn:hover {
+    background: #1d4ed8;
+}
+
 #new-round {
     background: #10b981;
 }
@@ -114,19 +141,27 @@ button:active {
     background: #059669;
 }
 
-/* Reveal Button */
-#reveal-btn {
-    background: #6b7280;
-}
-
-#reveal-btn:hover {
-    background: #4b5563;
-}
-
-/* ---- Result ---- */
 #result {
-    margin-top: 20px;
-    font-size: 18px;
+    margin: 18px auto 8px auto;
+    font-size: 1rem;
     font-weight: 500;
-    color: #111827;
+    line-height: 1.45;
+    max-width: 100%;
+    word-break: break-word;
+}
+
+@media (max-width: 480px) {
+    .app-shell {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    button {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    #axis {
+        margin-bottom: 16px;
+    }
 }

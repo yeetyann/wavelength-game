@@ -3,6 +3,7 @@ let currentPrompt = null;
 let targetValue = 5;
 let revealed = false;
 
+const promptTitle = document.getElementById("prompt-title");
 const leftLabel = document.getElementById("left-label");
 const rightLabel = document.getElementById("right-label");
 const guessValue = document.getElementById("guess-value");
@@ -25,6 +26,7 @@ function startNewRound() {
     targetValue = Math.floor(Math.random() * 10) + 1;
     revealed = false;
 
+    promptTitle.textContent = currentPrompt.title;
     leftLabel.textContent = currentPrompt.low;
     rightLabel.textContent = currentPrompt.high;
 

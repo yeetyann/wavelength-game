@@ -32,6 +32,12 @@ body {
     margin: 20px;
 }
 
+#prompt-title {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
 #guess-value {
     margin-top: 10px;
     font-size: 18px;
